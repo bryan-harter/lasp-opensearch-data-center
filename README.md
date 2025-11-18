@@ -2,7 +2,7 @@
 
 A construct library for implementing an OpenSearch data center.
 
-# Installation
+# Installations
 
 The package is available on PyPI:
 
