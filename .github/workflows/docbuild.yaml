@@ -1,0 +1,33 @@
+name: Build Docs
+# https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number }}-${{ github.event.ref }}
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  # This job builds the mkdocs and deploys them to github pages
+  deploy-mkdocs:
+    name: Deploy Mkdocs to Github Pages
+    needs:
+      - build-dist-artifacts
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install mkdocs
+        run: pip install mkdocs
+      - name: Build mkdocs
+        run: mkdocs gh-deploy --force
